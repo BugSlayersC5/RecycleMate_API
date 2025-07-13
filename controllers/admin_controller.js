@@ -1,4 +1,4 @@
-import { Admin } from "../models/Admin_models.js";
+import { Admin } from "../models/admin_models.js";
 import { Collector } from "../models/collector_model.js";
 import { User } from "../models/user_models.js";
 import { adminLoginSchema } from "../schemas/admin_schemas.js";

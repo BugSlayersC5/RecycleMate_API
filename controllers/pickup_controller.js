@@ -1,4 +1,4 @@
-import { Pickup } from "../models/Pickup_models.js";
+import { Pickup } from "../models/pickup_models.js";
 import { pickupSchema } from "../schemas/pickup_schemas.js";
 
 

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { Admin } from "../models/Admin_models.js"
+import { Admin } from "../models/admin_models.js";
 
 export const authenticateAdmin = async (req, res, next) => {
   const authHeader = req.headers.authorization;

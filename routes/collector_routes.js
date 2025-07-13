@@ -1,8 +1,6 @@
 import { Router } from "express";
-import { loginCollector, viewAllPickups, getUserPickups, completePickup } from "../controllers/collector_controller.js";
-
-
-import { authenticateCollector } from "../middlewares/controller_auth.js"; 
+import { loginCollector, viewAllPickups, getUserPickups, completePickup } from "../controllers/collector_controller.js"
+import { authenticateCollector } from "../middlewares/collector_auth.js"; 
 
 export const collectorRouter = Router();
 
