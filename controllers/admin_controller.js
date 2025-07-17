@@ -1,5 +1,5 @@
-import { Admin } from "../models/admin_models.js";
-import { Collector } from "../models/collector_models.js";
+import { Admin } from "../models/admin_models.mjs";
+import { Collector } from "../models/collector_models.mjs";
 import { User } from "../models/user_models.js";
 import { adminLoginSchema } from "../schemas/admin_schemas.js";
 import bcrpt from "bcrypt"

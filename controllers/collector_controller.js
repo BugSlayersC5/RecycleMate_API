@@ -1,6 +1,6 @@
 import { collectorLoginSchema } from "../schemas/collector_schemas.js";
-import { Pickup } from "../models/pickup_models.js";
-import { Collector } from "../models/collector_models.js";
+import { Pickup } from "../models/pickup_models.mjs";
+import { Collector } from "../models/collector_models.mjs";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
