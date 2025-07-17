@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { Collector } from "../models/collector_models.mjs"
+import { Collector } from "../models/collector_models.js"
 
 
 export const authenticateCollector = async (req, res, next) => {
