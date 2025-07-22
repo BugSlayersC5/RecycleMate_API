@@ -1,8 +1,50 @@
 import { collectorLoginSchema } from "../schemas/collector_schemas.js";
 import { Pickup } from "../models/pickup_models.js";
 import { Collector } from "../models/collector_models.js";
+import { sendEmail } from "../utils/sendmail.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+
+
+export const signupCollector = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, confirmPassword } = req.body;
+
+    const existing = await Collector.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: "Email is already registered." });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const collector = await Collector.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      status: "pending"
+    });
+
+    await sendEmail(
+  collector.email,
+  "Collector Signup Pending Approval",
+  `Hi ${collector.firstName},\n\nThanks for signing up as a collector on RecycleMate!\n\nYour account is pending admin approval. You’ll receive an email once approved.\n\nRecycle responsibly!`
+);
+
+
+    res.status(201).json({
+      message: "Signup successful. Your account is pending admin approval.",
+      collector
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: "Something went wrong during signup." });
+  }
+};
 
 export const loginCollector = async (req, res) => {
   const { error } = collectorLoginSchema.validate(req.body);

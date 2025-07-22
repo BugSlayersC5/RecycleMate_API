@@ -2,6 +2,7 @@ import { Admin } from "../models/admin_models.js";
 import { Collector } from "../models/collector_models.js";
 import { User } from "../models/user_models.js";
 import { adminLoginSchema } from "../schemas/admin_schemas.js";
+import { sendEmail } from "../utils/sendmail.js";
 import bcrpt from "bcrypt"
 import jwt from "jsonwebtoken"
 
@@ -111,5 +112,33 @@ export const deleteCollector = async (req, res) => {
     res.status(200).json({ message: "Collector deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Error deleting collector" });
+  }
+};
+
+//Admin approves collector
+export const approveCollector = async (req, res) => {
+  try {
+    const collector = await Collector.findById(req.params.id);
+
+    if (!collector) {
+      return res.status(404).json({ message: "Collector not found" });
+    }
+
+    collector.isApproved = true;
+    collector.status = "active";
+    await collector.save();
+
+    await sendEmail(
+      collector.email,
+      "Your Collector Account Is Approved",
+      `Hi ${collector.firstName},\n\nYour RecycleMate account has been approved. You can now log in and start collecting pickups!\n\nThank you,\nRecycleMate Team`
+    );
+
+    res.status(200).json({
+      message: "Collector approved and notified successfully",
+      collector,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error approving collector" });
   }
 };

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {  loginAdmin, createCollectorByAdmin, getAllUsers, getAllCollectors,  deleteUser, deleteCollector} from "../controllers/admin_controller.js";
+import {  loginAdmin, createCollectorByAdmin, getAllUsers, getAllCollectors,  deleteUser, deleteCollector, approveCollector} from "../controllers/admin_controller.js";
 import { authenticateAdmin } from "../middlewares/admin_auth.js";
 
 export const adminRouter = Router();
@@ -10,3 +10,4 @@ adminRouter.get("/users", authenticateAdmin, getAllUsers);
 adminRouter.get("/collectors", authenticateAdmin, getAllCollectors);
 adminRouter.delete("/users/:id", authenticateAdmin, deleteUser);
 adminRouter.delete("/collectors/:id", authenticateAdmin, deleteCollector);
+adminRouter.patch("/collectors/:id/approve", authenticateAdmin, approveCollector);

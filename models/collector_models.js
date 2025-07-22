@@ -22,6 +22,19 @@ const collectorSchema = new Schema({
         type: String,
         required: true
     },
+
+
+    status:{
+        type: String,
+        enum:["pending","active"],
+        default:"pending"
+    },
+    
+    isApproved:{
+        type: Boolean,
+        default: "false"
+    },
+
         
 },{timestamps: true});
 
