@@ -3,6 +3,7 @@ import { Collector } from "../models/collector_models.js";
 import { User } from "../models/user_models.js";
 import { adminLoginSchema } from "../schemas/admin_schemas.js";
 import { sendEmail } from "../utils/sendmail.js";
+import { Pickup } from "../models/pickup_models.js";
 import bcrpt from "bcrypt"
 import jwt from "jsonwebtoken"
 
@@ -142,3 +143,52 @@ export const approveCollector = async (req, res) => {
     res.status(500).json({ message: "Error approving collector" });
   }
 };
+
+// Admin gets all pickup 
+export const getAllPickups = async (req, res) => {
+  try {
+    const pickups = await Pickup.find()
+      .populate("user", "firstName lastName email") 
+      .populate("assignedCollector", "firstName lastName email"); 
+
+    res.status(200).json({ pickups });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching pickups" });
+  }
+};
+
+// Admin assigns a pickup to a collector 
+export const assignCollectorToPickup = async (req, res) => {
+  try {
+    const { collectorId } = req.body;
+    const { pickupId } = req.params;
+
+    const pickup = await Pickup.findById(pickupId);
+    if (!pickup) {
+      return res.status(404).json({ message: "Pickup not found" });
+    }
+
+    const collector = await Collector.findById(collectorId);
+    if (!collector || collector.status !== "active") {
+      return res.status(400).json({ message: "Invalid or inactive collector" });
+    }
+
+    pickup.assignedCollector = collector.id;
+    pickup.status = "assigned";
+    await pickup.save();
+
+    await sendEmail(
+      collector.email,
+      "New Pickup Assigned",
+      `Hello ${collector.firstName},\n\nYou have been assigned a new pickup at ${pickup.location} scheduled for ${pickup.date} at ${pickup.time}.\n\nThank you!\nRecycleMate Team`
+    );
+
+    res.status(200).json({
+      message: "Collector assigned successfully and notified via email",
+      pickup,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error assigning collector" });
+  }
+};
+

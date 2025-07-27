@@ -34,6 +34,12 @@ const pickupSchema = new Schema({
 
     },
 
+    assignedCollector: {
+  type: Schema.Types.ObjectId,
+  ref: "Collector", 
+  default: null     
+}
+
 },{timestamps: true});
 
 pickupSchema.plugin(normalize)
