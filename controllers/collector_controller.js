@@ -123,3 +123,17 @@ export const completePickup = async (req, res) => {
     res.status(500).json({ message: "Error updating pickup" });
   }
 };
+
+// Collector view assigned pickup
+export const viewAssignedPickups = async (req, res) => {
+  try {
+    const pickups = await Pickup.find({ assignedCollector: req.user.id })
+    .populate("user", "-password")
+    .populate("assignedCollector", "-password");
+  
+    res.status(200).json({ pickups });
+  } catch (err) {
+     console.error("Error in viewAssignedPickups:", err);
+    res.status(500).json({ message: "Error fetching assigned pickups" });
+  }
+};
